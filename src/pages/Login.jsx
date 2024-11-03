@@ -13,7 +13,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/admin/login`,
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/patient/login`,
         user
       )
       if (data.success) {

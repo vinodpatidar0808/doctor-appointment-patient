@@ -10,7 +10,7 @@ const Signup = () => {
   const [user, setUser] = useState({ name: "", phone: "", email: "", age: "", password: "", username: "", gender: "", services: "", terms: false })
 
   const handleChange = (e) => {
-    if(e.target.name === 'terms'){
+    if (e.target.name === 'terms') {
       setUser(curr => ({ ...curr, [e.target.name]: e.target.checked }))
       return
     }
@@ -30,8 +30,10 @@ const Signup = () => {
 
   const handleSignup = async () => {
     // TODO: implement this function
+    const payload = structuredClone(user)
+    payload.services = [payload.services]
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/patient/signup`, user)
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/patient/signup`, payload)
       if (data.success) {
         showToastMessage('SUCCESS', data.message)
         setUser({ name: "", phone: "", email: "", age: "", password: "", username: "", gender: "", services: "", terms: false })

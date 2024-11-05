@@ -13,8 +13,8 @@ const Dashboard = () => {
   const [calenderView, setCalenderView] = useState("month")
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [slots, setSlots] = useState([]);
-  const [selectedSlots, setSelectedSlots] = useState(null);
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [selectedSlots, setSelectedSlots] = useState({start: "", end: ""});
 
   const [events, setEvents] = useState([
     {
@@ -33,13 +33,18 @@ const Dashboard = () => {
 
 
   const handleSelectSlot = (slotInfo) => {
-    // console.log("slotInfo: ", slotInfo);
-    const { start } = slotInfo;
+    const { start, end, slots } = slotInfo;
     const action = slotInfo.action;
-    console.log("slotInfo: ", slotInfo);
-    setSlots(generateTimeSlots(start))
-    const startHour = moment(start).hour();
-    const startMinute = moment(start).minute();
+    if (action === "select" && start.toDateString() !== end.toDateString()) {
+      showToastMessage("ERROR", "Please select same day slots")
+      return
+    }
+    if(action === "select" && slots?.length > 2 ){
+      showToastMessage("ERROR", "You can not book an Appointment for more than 1 hour!")
+      return 
+    }
+
+    setTimeSlots(generateTimeSlots(start))
     const day = moment(start).day();
     const today = moment().format('YYYYMMDD');
     const currDate = moment(start).format('YYYYMMDD');
@@ -53,13 +58,15 @@ const Dashboard = () => {
 
     // ((startHour > 8) || (startHour === 8 && startMinute >= 30))  && // After 8:30 AM
     // (startHour < 17 || (startHour === 17 && startMinute <= 30))
-    console.log("timeCondition: ", timeCondition);
     if (
       day >= 1 && day <= 5 && // Monday to Friday
       timeCondition
     ) {
       setSelectedDate(start);
       setShowModal(true);
+      if (action === "select") {
+        setSelectedSlots({ start: moment(slots[0]).format('hh:mm A'), end: moment(slots[slots.length - 1]).format('hh:mm A') });
+      }
     } else {
       showToastMessage("ERROR", 'Appointments can only be scheduled between Monday to Friday from 8:30 AM to 5:30 PM.');
     }
@@ -67,10 +74,14 @@ const Dashboard = () => {
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
-    setSlots(generateTimeSlots(newDate))
+    setSelectedSlots([]);
+    setTimeSlots(generateTimeSlots(newDate))
   };
 
   const handleCloseModal = () => {
+    setSelectedDate(null);
+    setSelectedSlots([]);
+    setTimeSlots([]);
     setShowModal(false);
   };
 
@@ -88,10 +99,8 @@ const Dashboard = () => {
         defaultView="month"
         selectable
         onSelectSlot={handleSelectSlot}
-        step={30}
+        step={60}
         timeslots={1}
-        // min={Date.now()}
-
         min={new Date(1970, 1, 1, 8, 30)} // Set the minimum time to 8:30 AM, in week view calender
         max={new Date(1970, 1, 1, 17, 30)} // Set the maximum time to 5:30 PM, in week view calender
         dayPropGetter={(date) => {
@@ -113,7 +122,7 @@ const Dashboard = () => {
           toolbar: CalendarToolbar
         }}
       />
-      <AppointmentModal show={showModal} slots={slots} selectedSlots={selectedSlots} setSelectedSlot={setSelectedSlots} onDateChange={handleDateChange} date={selectedDate} onClose={handleCloseModal} />
+      <AppointmentModal show={showModal} timeSlots={timeSlots} selectedSlots={selectedSlots} setSelectedSlots={setSelectedSlots} onDateChange={handleDateChange} date={selectedDate} onClose={handleCloseModal} />
     </div>
   )
 }

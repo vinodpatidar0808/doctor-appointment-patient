@@ -78,26 +78,21 @@ export const generateTimeSlots = (date) => {
   const today = moment().format('YYYYMMDD');
   const currHour = moment(Date.now()).hour();
   const currMinutes = moment(Date.now()).minutes();
-  // console.log("currDate: ", currDate);
-  // console.log("today: ", today);
-  // console.log("currHour: ", currHour, currMinutes);
-  // Generate time slots between 8:30 AM and 5:30 PM, 1-hour intervals
-  // currDate and hour is past 8:30 AM 
-  // hour -> 9, minutes 0 - 30: slots start at 9:30 AM,  minutes 30 - 59: slots start at 10:00 AM
   const slots = [];
   const startHour = currDate === today ? (currMinutes < 30 ? currHour : currHour + 1) : 8; // Start at 8:00 AM
   const endHour = 17; // End at 5:00 PM
 
   for (let hour = startHour; hour <= endHour; hour++) {
-    const slotTime = moment(date).set({ hour, minute: 0 });
+    const slotTime = moment(date).set({ hour, minute: 0 }).add(30, 'minutes');
     const formattedTime = slotTime.format('hh:mm A');
-    if ((currDate !== today && hour !== startHour) || (currDate === today && currMinutes > 30)) slots.push(formattedTime);
+    // (currDate === today && currMinutes > 30)
+    if ((currDate !== today && hour !== endHour)) slots.push(formattedTime);
 
     // Optionally add half-hour slots
-    if (hour !== endHour) {
-      const halfHourSlot = slotTime.clone().add(30, 'minutes').format('hh:mm A');
-      slots.push(halfHourSlot);
-    }
+    // if (hour !== endHour) {
+    //   const halfHourSlot = slotTime.clone().add(30, 'minutes').format('hh:mm A');
+    //   slots.push(halfHourSlot);
+    // }
   }
   return slots;
 };

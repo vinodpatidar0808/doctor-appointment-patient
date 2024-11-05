@@ -2,11 +2,7 @@ import { getMonthName } from "../utils";
 
 const CalendarToolbar = (props) => {
   const { label, date, view } = props;
-  // console.log("props: ", props)
   const month = getMonthName(date.getMonth());
-  const year = date.getFullYear();
-
-
 
   const goToPrevious = () => {
     props.onNavigate('PREV');
@@ -16,9 +12,6 @@ const CalendarToolbar = (props) => {
     props.onNavigate('NEXT');
   };
 
-  // const goToToday = () => {
-  //   props.onNavigate('TODAY');
-  // };
 
   return (
     <div className="flex justify-between items-center ">

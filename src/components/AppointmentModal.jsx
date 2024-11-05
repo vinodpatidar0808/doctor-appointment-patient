@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { useEffect, useState } from "react";
 
-const AppointmentModal = ({ show, date, onClose, slots, onDateChange, selectedSlots, setSelectedSlots }) => {
+const AppointmentModal = ({ show, date, onClose, timeSlots, onDateChange, selectedSlots, setSelectedSlots }) => {
   const [currentDate, setCurrentDate] = useState(date);
 
   useEffect(() => {
@@ -28,6 +28,15 @@ const AppointmentModal = ({ show, date, onClose, slots, onDateChange, selectedSl
     handleDateChange(nextDate);
   };
 
+  const handleSlotChange = (slot) => {
+    const slotEnd = moment(slot, 'hh:mm A').add(30, 'minutes').format('hh:mm A');
+
+    if (selectedSlots.start === slot && selectedSlots.end === slotEnd) {
+      setSelectedSlots({ start: '', end: '' });
+    } else {
+      setSelectedSlots({ start: slot, end: slotEnd });
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center">
@@ -66,8 +75,8 @@ const AppointmentModal = ({ show, date, onClose, slots, onDateChange, selectedSl
         <div className="mb-3  ">
           <p className="font-medium">Select Time Slot </p>
           <div className="flex flex-wrap gap-1 h-28 px-2 justify-between overflow-y-auto">
-            {slots.map((slot, index) => (
-              <button onClick={() => setSelectedSlots(slot)} key={index} className={`py-2 px-1 border rounded-md hover:bg-[#D6CCCC] ${selectedSlots.includes(slot) ? 'bg-[#D6CCCC]' : ''} `}>{slot} - <span className="text-xs">{moment(slot, 'HH:mm:A').add(30, 'minutes').format('hh:mm A')}</span></button>
+            {timeSlots.map((slot, index) => (
+              <button onClick={() => handleSlotChange(slot)} key={index} className={`py-2 px-1 border rounded-md hover:bg-[#D6CCCC] ${selectedSlots.start === slot ? 'bg-[#D6CCCC]' : ''} `}>{slot} - <span className="text-xs">{moment(slot, 'HH:mm:A').add(60, 'minutes').format('hh:mm A')}</span></button>
             ))}
           </div>
         </div>
@@ -78,7 +87,7 @@ const AppointmentModal = ({ show, date, onClose, slots, onDateChange, selectedSl
         <p className="font-semibold">Total: &#8377;999.00 <span className="text-xs">Including GST</span></p>
         <div className="flex justify-between">
           <button onClick={onClose} className="px-4 py-2 border rounded">Cancel</button>
-          <button className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Make Payment</button>
+          <button disabled className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-600 disabled:bg-gray-500">Make Payment</button>
         </div>
       </div>
     </div>

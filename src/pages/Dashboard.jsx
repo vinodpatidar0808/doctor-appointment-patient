@@ -29,6 +29,12 @@ const Dashboard = () => {
     },
   ]);
 
+  const useEffect(() => {
+    // TODO: get dentists, 
+    // TODO: get 
+  
+  }, [third])
+  
 
 
 

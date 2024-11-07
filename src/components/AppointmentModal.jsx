@@ -29,7 +29,7 @@ const AppointmentModal = ({ show, date, onClose, timeSlots, onDateChange, select
   };
 
   const handleSlotChange = (slot) => {
-    const slotEnd = moment(slot, 'hh:mm A').add(30, 'minutes').format('hh:mm A');
+    const slotEnd = moment(slot, 'hh:mm A').add(60, 'minutes').format('hh:mm A');
 
     if (selectedSlots.start === slot && selectedSlots.end === slotEnd) {
       setSelectedSlots({ start: '', end: '' });

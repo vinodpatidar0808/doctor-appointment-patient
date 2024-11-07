@@ -45,6 +45,7 @@ const Dashboard = () => {
     }
 
     setTimeSlots(generateTimeSlots(start))
+    console.log('slots: ', slots)
     const day = moment(start).day();
     const today = moment().format('YYYYMMDD');
     const currDate = moment(start).format('YYYYMMDD');
@@ -54,10 +55,11 @@ const Dashboard = () => {
     // return 
 
     // Allow only Monday to Friday and between 8:30 AM and 5:30 PM
-    const timeCondition = currDate === today ? (currHour < 17 || (currHour === 17 && currMinutes <= 30)) : true
+    const timeCondition = currDate === today ? (currHour < 17 || (currHour === 17 && currMinutes <= 30)) : currDate < today ? false :true
 
     // ((startHour > 8) || (startHour === 8 && startMinute >= 30))  && // After 8:30 AM
     // (startHour < 17 || (startHour === 17 && startMinute <= 30))
+    // TODO: check slots for same day 
     if (
       day >= 1 && day <= 5 && // Monday to Friday
       timeCondition
@@ -85,7 +87,8 @@ const Dashboard = () => {
     setShowModal(false);
   };
 
-
+  console.log("setSelectedSlots: ", selectedSlots)
+  console.log("selectedDate: ", selectedDate)
 
   return (
     <div className="h-[500px] flex flex-col px-8">

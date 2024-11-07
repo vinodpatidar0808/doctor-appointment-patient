@@ -83,10 +83,12 @@ export const generateTimeSlots = (date) => {
   const endHour = 17; // End at 5:00 PM
 
   for (let hour = startHour; hour <= endHour; hour++) {
-    const slotTime = moment(date).set({ hour, minute: 0 }).add(30, 'minutes');
+    const slotTime = moment(date).set({ hour, minute: 30 });
     const formattedTime = slotTime.format('hh:mm A');
+
+    slots.push(formattedTime);
     // (currDate === today && currMinutes > 30)
-    if ((currDate !== today && hour !== endHour)) slots.push(formattedTime);
+    // if ((currDate !== today && hour !== endHour)) slots.push(formattedTime);
 
     // Optionally add half-hour slots
     // if (hour !== endHour) {

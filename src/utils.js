@@ -1,6 +1,9 @@
 import moment from 'moment';
 import { toast } from 'react-toastify';
 
+export const cardExpiryRegex = /^(0[1-9]|1[0-2])\/\d{0,2}$/
+
+
 export const getPageHeader = (pathname) => {
   if (pathname === "/") {
     return "Dashboard"

@@ -6,6 +6,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import AppointmentModal from "../components/AppointmentModal"
 import CalendarToolbar from "../components/CalenderToolbar"
 import { generateTimeSlots, showToastMessage } from "../utils"
+
 const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
 
@@ -14,7 +15,7 @@ const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [timeSlots, setTimeSlots] = useState([]);
-  const [selectedSlots, setSelectedSlots] = useState({start: "", end: ""});
+  const [selectedSlots, setSelectedSlots] = useState({ start: "", end: "" });
 
   const [events, setEvents] = useState([
     {
@@ -29,15 +30,6 @@ const Dashboard = () => {
     },
   ]);
 
-  const useEffect(() => {
-    // TODO: get dentists, 
-    // TODO: get 
-  
-  }, [third])
-  
-
-
-
   const handleSelectSlot = (slotInfo) => {
     const { start, end, slots } = slotInfo;
     const action = slotInfo.action;
@@ -45,13 +37,12 @@ const Dashboard = () => {
       showToastMessage("ERROR", "Please select same day slots")
       return
     }
-    if(action === "select" && slots?.length > 2 ){
+    if (action === "select" && slots?.length > 2) {
       showToastMessage("ERROR", "You can not book an Appointment for more than 1 hour!")
-      return 
+      return
     }
 
     setTimeSlots(generateTimeSlots(start))
-    console.log('slots: ', slots)
     const day = moment(start).day();
     const today = moment().format('YYYYMMDD');
     const currDate = moment(start).format('YYYYMMDD');
@@ -61,7 +52,7 @@ const Dashboard = () => {
     // return 
 
     // Allow only Monday to Friday and between 8:30 AM and 5:30 PM
-    const timeCondition = currDate === today ? (currHour < 17 || (currHour === 17 && currMinutes <= 30)) : currDate < today ? false :true
+    const timeCondition = currDate === today ? (currHour < 17 || (currHour === 17 && currMinutes <= 30)) : currDate < today ? false : true
 
     // ((startHour > 8) || (startHour === 8 && startMinute >= 30))  && // After 8:30 AM
     // (startHour < 17 || (startHour === 17 && startMinute <= 30))
@@ -92,9 +83,6 @@ const Dashboard = () => {
     setTimeSlots([]);
     setShowModal(false);
   };
-
-  console.log("setSelectedSlots: ", selectedSlots)
-  console.log("selectedDate: ", selectedDate)
 
   return (
     <div className="h-[500px] flex flex-col px-8">

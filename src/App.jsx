@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import Payment from "./pages/Payment"
+import PaymentSuccess from "./pages/PaymentSuccess"
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
         </Route>
       </Routes>
       <ToastContainer />

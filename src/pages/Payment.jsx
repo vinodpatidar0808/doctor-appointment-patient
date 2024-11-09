@@ -37,7 +37,7 @@ const Payment = () => {
       })
       if (data.success) {
         showToastMessage('SUCCESS', data.message)
-        navigate('/')
+        navigate('/payment/success')
       } else {
         showToastMessage('ERROR', data.message)
       }

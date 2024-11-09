@@ -1,8 +1,10 @@
 
+import axios from "axios"
 import moment from 'moment'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
+import { useNavigate } from "react-router-dom"
 import AppointmentModal from "../components/AppointmentModal"
 import CalendarToolbar from "../components/CalenderToolbar"
 import { generateTimeSlots, showToastMessage } from "../utils"
@@ -11,6 +13,7 @@ const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [calenderView, setCalenderView] = useState("month")
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -29,6 +32,45 @@ const Dashboard = () => {
       end: new Date(2024, 10, 6, 13, 30),   // November 6, 2024, 1:30 PM
     },
   ]);
+
+  const getAppointments = async () => {
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    try {
+      const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/patient/appointments/${user._id}`, {
+        headers: {
+          'Authorization': `${sessionStorage.getItem('authToken')}`
+        }
+      })
+      if (data.success) {
+        setEvents(data.appointments.map((appointment) => {
+          const [day, month, year] = appointment.startDate.split('/');
+          const [startHour, startMinutes] = moment(appointment.startTime, 'hh:mm A').format('HH:mm').split(':');
+          const [endHour, endMinutes] = moment(appointment.endTime, 'hh:mm A').format('HH:mm').split(':');
+          return {
+            amount: appointment.amount,
+            title: appointment.title,
+            start: new Date(year, month - 1, day, startHour, startMinutes),
+            end: new Date(year, month - 1, day, endHour, endMinutes),
+          }
+        }))
+      } else {
+        showToastMessage('ERROR', data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      if (+error.response?.status === 401) {
+        sessionStorage.removeItem('authToken')
+        navigate('/login')
+        return
+      }
+      showToastMessage('ERROR', error.response.data.message)
+    }
+  }
+
+  useEffect(() => {
+    getAppointments();
+    //eslint-disable-next-line
+  }, [])
 
   const handleSelectSlot = (slotInfo) => {
     const { start, end, slots } = slotInfo;
@@ -115,7 +157,7 @@ const Dashboard = () => {
         }}
         showAllEvents={true}
         components={{
-          event: ({ event }) => <div className="flex items-end" onClick={() => setCalenderView('week')}>{event.title}</div>,
+          event: ({ event }) => <div className="flex text-xs items-end" onClick={() => setCalenderView('week')}>{event.title}</div>,
           toolbar: CalendarToolbar
         }}
       />

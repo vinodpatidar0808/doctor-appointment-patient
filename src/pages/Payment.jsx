@@ -23,7 +23,8 @@ const Payment = () => {
       serviceId: bookingData.service._id,
       startTime: bookingData.selectedSlots.start,
       endTime: bookingData.selectedSlots.end,
-      startDate: payload.endDate = moment(bookingData.date).format('DD/MM/YYYY'),
+      startDate: moment(bookingData.date).format('DD/MM/YYYY'),
+      endDate: moment(bookingData.date).format('DD/MM/YYYY'),
       userId: user._id,
       userName: user.name,
     }

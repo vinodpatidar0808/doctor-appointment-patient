@@ -20,7 +20,7 @@ const Login = () => {
         sessionStorage.setItem('authToken', data.token);
         sessionStorage.setItem('user', JSON.stringify(data.user));
         showToastMessage('SUCCESS', data.message)
-        navigate('/')
+        navigate('/dashboard')
         return
       }else{
         showToastMessage('ERROR', data.message)

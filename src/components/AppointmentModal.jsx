@@ -42,7 +42,7 @@ const AppointmentModal = ({ show, date, onClose, timeSlots, onDateChange, select
       console.log(error)
       if (+error.response.status === 401) {
         sessionStorage.removeItem('authToken')
-        navigate('/login')
+        navigate('/')
       }
       showToastMessage('ERROR', error.response.data.message)
     }

@@ -60,7 +60,7 @@ const Dashboard = () => {
       console.log(error)
       if (+error.response?.status === 401) {
         sessionStorage.removeItem('authToken')
-        navigate('/login')
+        navigate('/')
         return
       }
       showToastMessage('ERROR', error.response.data.message)

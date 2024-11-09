@@ -39,7 +39,8 @@ const Signup = () => {
         setUser({ name: "", phone: "", email: "", age: "", password: "", username: "", gender: "", services: "", terms: false })
         // TODO: store other user information in session if time permits
         sessionStorage.setItem('authToken', data.token)
-        navigate('/')
+        sessionStorage.setItem('user', JSON.stringify(data.user))
+        navigate('/dashboard')
       } else {
         showToastMessage('ERROR', data.message)
       }
@@ -48,7 +49,7 @@ const Signup = () => {
       showToastMessage('ERROR', error.response.data.message)
       if (error.response.status === 401) {
         sessionStorage.removeItem('authToken')
-        navigate('/login')
+        navigate('/')
       }
     }
   }

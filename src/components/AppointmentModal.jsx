@@ -160,7 +160,6 @@ const AppointmentModal = ({ show, date, onClose, timeSlots, onDateChange, select
         </select>
         <select onChange={handleChange} name="service" className="w-full mb-3 p-2 border rounded">
           <option>Select Service</option>
-          {/* Add options */}
           {services?.map((service) => (
             <option key={service._id} value={JSON.stringify(service)}>{service.name}</option>
           ))}

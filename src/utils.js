@@ -5,22 +5,9 @@ export const cardExpiryRegex = /^(0[1-9]|1[0-2])\/\d{0,2}$/
 
 
 export const getPageHeader = (pathname) => {
-  if (pathname === "/") {
+  if (pathname === "/dashboard") {
     return "Dashboard"
   }
-
-  if (pathname === "/services") {
-    return "Add Services"
-  }
-
-  if (pathname === "/reports") {
-    return "View Report"
-  }
-
-  if (pathname === "/dentist") {
-    return "Add Dentist"
-  }
-
 }
 
 export const showToastMessage = (type, message) => {
@@ -90,14 +77,6 @@ export const generateTimeSlots = (date) => {
     const formattedTime = slotTime.format('hh:mm A');
 
     slots.push(formattedTime);
-    // (currDate === today && currMinutes > 30)
-    // if ((currDate !== today && hour !== endHour)) slots.push(formattedTime);
-
-    // Optionally add half-hour slots
-    // if (hour !== endHour) {
-    //   const halfHourSlot = slotTime.clone().add(30, 'minutes').format('hh:mm A');
-    //   slots.push(halfHourSlot);
-    // }
   }
   return slots;
 };

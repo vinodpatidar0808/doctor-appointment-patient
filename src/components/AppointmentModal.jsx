@@ -72,13 +72,14 @@ const AppointmentModal = ({ show, date, onClose, timeSlots, onDateChange, select
       console.error(error)
       if (+error.response.status === 401) {
         sessionStorage.removeItem('authToken')
-        navigate('/login')
+        navigate('/')
       }
       showToastMessage('ERROR', error.response.data.message)
     }
   }
 
   useEffect(() => {
+    if(!show) return
     getDentists()
     getServices()
     // eslint-disable-next-line 

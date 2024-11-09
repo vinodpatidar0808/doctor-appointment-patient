@@ -20,18 +20,7 @@ const Dashboard = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [selectedSlots, setSelectedSlots] = useState({ start: "", end: "" });
 
-  const [events, setEvents] = useState([
-    {
-      title: "Meeting ",
-      start: new Date(2024, 10, 6, 9, 0), // November 6, 2024, 9:00 AM
-      end: new Date(2024, 10, 6, 12, 0),  // November 6, 2024, 12:00 PM
-    },
-    {
-      title: "Lunch Break",
-      start: new Date(2024, 10, 6, 12, 30), // November 6, 2024, 12:30 PM
-      end: new Date(2024, 10, 6, 13, 30),   // November 6, 2024, 1:30 PM
-    },
-  ]);
+  const [events, setEvents] = useState([]);
 
   const getAppointments = async () => {
     const user = JSON.parse(sessionStorage.getItem('user'))

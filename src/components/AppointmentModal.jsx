@@ -64,7 +64,7 @@ const AppointmentModal = ({ show, date, onClose, timeSlots, onDateChange, select
       if (data.success) {
         setLoading(false)
         sessionStorage.setItem("services", JSON.stringify(data.services))
-        setDentists(data.dentists)
+        setServices(data.services)
       } else {
         showToastMessage('ERROR', data.message)
       }
@@ -81,7 +81,7 @@ const AppointmentModal = ({ show, date, onClose, timeSlots, onDateChange, select
   useEffect(() => {
     getDentists()
     getServices()
-  // eslint-disable-next-line 
+    // eslint-disable-next-line 
   }, [])
 
   useEffect(() => {
@@ -126,7 +126,7 @@ const AppointmentModal = ({ show, date, onClose, timeSlots, onDateChange, select
 
   // redirect to payment page and closes modal 
   const handleBook = () => {
-    navigate('/payment', { state: { selectedSlots, date, bookingData } });
+    navigate('/payment', { state: { selectedSlots, date, ...bookingData } });
     onClose();
   }
 

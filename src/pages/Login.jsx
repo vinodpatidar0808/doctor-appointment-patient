@@ -18,6 +18,7 @@ const Login = () => {
       )
       if (data.success) {
         sessionStorage.setItem('authToken', data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.user));
         showToastMessage('SUCCESS', data.message)
         navigate('/')
         return

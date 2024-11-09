@@ -1,6 +1,9 @@
+import axios from "axios"
+import moment from 'moment'
 import { useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import Input from "../components/Input"
+import { showToastMessage } from "../utils"
 
 const Payment = () => {
   const navigate = useNavigate()
@@ -9,6 +12,39 @@ const Payment = () => {
   const [paymentData, setPaymentData] = useState({ cardNumber: '', cardHolderName: "", cardExpiry: "", cardCvv: "" })
   const [showCvv, setShowCvv] = useState(false)
 
+  const createBooking = async () => {
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    const payload = {
+      title: `${bookingData.service.name} with ${bookingData.dentist.name}`,
+      dentistName: bookingData.dentist.name,
+      serviceName: bookingData.service.name,
+      amount: bookingData.service.price + bookingData.dentist.hourlyRate,
+      dentistId: bookingData.dentist._id,
+      serviceId: bookingData.service._id,
+      startTime: bookingData.selectedSlots.start,
+      endTime: bookingData.selectedSlots.end,
+      startDate: payload.endDate = moment(bookingData.date).format('DD/MM/YYYY'),
+      userId: user._id,
+      userName: user.name,
+    }
+
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/patient/createappointment`, { ...payload }, {
+        headers: {
+          'Authorization': `${sessionStorage.getItem('authToken')}`
+        }
+      })
+      if (data.success) {
+        showToastMessage('SUCCESS', data.message)
+        navigate('/')
+      } else {
+        showToastMessage('ERROR', data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      showToastMessage('ERROR', error.response.data.message)
+    }
+  }
 
   const handleChange = (e) => {
     if (e.target.name === 'cardNumber' && "1234567890 ".includes(e.target.value.charAt(e.target.value.length - 1)) && e.target.value.length < 20) {
@@ -26,9 +62,8 @@ const Payment = () => {
 
     // cardExpiryRegex.test(e.target.value) // see why this is not working
     // todo: fix the / character removal, remove it automatically
-    console.log("e.target.name", e)
     if (e.target.name === 'cardExpiry' && e.target.value.length < 6 && (!isNaN(+e.target.value.charAt(e.target.value.length - 1)) || e.target.value.charAt(2) === '/')) {
-      if (e.target.value.length === 2 && bookingData.cardExpiry.charAt(2) !== '/') {
+      if (e.target.value.length === 2 && paymentData.cardExpiry.charAt(2) !== '/') {
         e.target.value += '/'
       }
 
@@ -47,8 +82,6 @@ const Payment = () => {
       setPaymentData({ ...paymentData, [e.target.name]: e.target.checked })
     }
   }
-
-
 
   const disablePayBtn = () => {
     return (paymentData?.cardNumber?.length < 19 || !paymentData.cardHolderName || paymentData?.cardExpiry?.length < 5 || paymentData?.cardCvv?.length < 3)
@@ -99,7 +132,7 @@ const Payment = () => {
 
       <div className="flex justify-end gap-3 text-charcoalGray">
         <button onClick={() => navigate(-1)} className="">Cancel</button>
-        <button onClick={() => console.log(paymentData)} disabled={disablePayBtn()} className="bg-softGray rounded-md px-6 py-1">Pay</button>
+        <button onClick={createBooking} disabled={disablePayBtn()} className="bg-softGray rounded-md px-6 py-1">Pay</button>
       </div>
 
     </div>
